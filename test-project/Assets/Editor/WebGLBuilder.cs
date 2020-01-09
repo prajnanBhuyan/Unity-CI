@@ -1,14 +1,17 @@
 using UnityEditor;
 
-class WebGLBuilder
+namespace UnityBuilder
 {
-    static void build()
+    class WebGLBuilder
     {
-        string[] scenes = 
-        { 
-            @"Assets\Scenes\Game.unity" 
+        static void build()
+        {
+            string[] scenes =
+            {
+            @"Assets\Scenes\Game.unity"
         };
-        
-        BuildPipeline.BuildPlayer(scenes, "WebGL-Dist", BuildTarget.WebGL, BuildOptions.None);
+
+            BuildPipeline.BuildPlayer(scenes, "WebGL-Dist", BuildTarget.WebGL, BuildOptions.None);
+        }
     }
 }
