@@ -1,0 +1,43 @@
+name: Build and test a unity3d project
+
+on: [push]
+
+jobs:
+  # get_license:
+  #   runs-on: ubuntu-latest
+  #   container:
+  #     image: gableroux/unity3d:2018.3.0f2-webgl
+  #     volumes:
+  #       - .:/project
+
+  #   steps:
+  #   - uses: actions/checkout@v1
+  #   - name: get license
+  #     run: ./ci/get_license.sh
+
+  build:
+    strategy:
+      matrix:
+        target: [WebGL]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Pull docker image
+        env:
+          IMAGE_NAME: gableroux/unity3d:2018.3.0f2-webgl
+        run: docker pull $IMAGE_NAME
+        
+      - name: Perform build
+        env:
+          IMAGE_NAME: gableroux/unity3d:2018.3.0f2-webgl
+          UNITY_LICENSE_CONTENT: ${{ secrets.UNITY_LICENSE_CONTENT }}
+          BUILD_NAME: GithubActions
+          BUILD_TARGET: ${{ matrix.target }}
+        run: ./ci/docker_build.sh
+      - uses: actions/upload-artifact@master
+        with:
+          name: ${{ matrix.target }}
+          path: ./Builds/
