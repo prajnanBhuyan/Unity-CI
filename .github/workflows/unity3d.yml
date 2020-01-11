@@ -6,7 +6,7 @@ jobs:
   # get_license:
   #   runs-on: ubuntu-latest
   #   container:
-  #     image: gableroux/unity3d:2018.3.0f2-webgl
+  #     image: gableroux/unity3d:2019.1.14f1
   #     volumes:
   #       - .:/project
 
@@ -15,28 +15,43 @@ jobs:
   #   - name: get license
   #     run: ./ci/get_license.sh
 
+  test:
+    strategy:
+      matrix:
+        platform: [editmode, playmode]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Pull docker image
+        env:
+          IMAGE_NAME: gableroux/unity3d:2019.1.14f1
+        run: docker pull $IMAGE_NAME
+      - name: Run tests
+        env:
+          IMAGE_NAME: gableroux/unity3d:2019.1.14f1
+          UNITY_LICENSE_CONTENT: ${{ secrets.UNITY_LICENSE_CONTENT }}
+          TEST_PLATFORM: ${{ matrix.platform }}
+        run: ./ci/docker_test.sh
+
   build:
     strategy:
       matrix:
-        target: [WebGL]
+        target: [StandaloneWindows64, WebGL, StandaloneLinux64]
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-
+      - uses: actions/checkout@v1
       - name: Pull docker image
         env:
-          IMAGE_NAME: gableroux/unity3d:2018.3.0f2-webgl
+          IMAGE_NAME: gableroux/unity3d:2019.1.14f1
         run: docker pull $IMAGE_NAME
-        
       - name: Perform build
         env:
-          IMAGE_NAME: gableroux/unity3d:2018.3.0f2-webgl
+          IMAGE_NAME: gableroux/unity3d:2019.1.14f1
           UNITY_LICENSE_CONTENT: ${{ secrets.UNITY_LICENSE_CONTENT }}
           BUILD_NAME: GithubActions
           BUILD_TARGET: ${{ matrix.target }}
-        run: "chmod +x ./ci/docker_build.sh && ./ci/docker_build.sh"
+        run: ./ci/docker_build.sh
       - uses: actions/upload-artifact@master
         with:
           name: ${{ matrix.target }}

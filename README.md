@@ -1,2 +1,2 @@
-# Unity-CI
-Building and Testing workflows for Unity development
+# github-actions-unity-playground
+Just trying things with github actions
