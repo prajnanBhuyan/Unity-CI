@@ -36,7 +36,7 @@ jobs:
           UNITY_LICENSE_CONTENT: ${{ secrets.UNITY_LICENSE_CONTENT }}
           BUILD_NAME: GithubActions
           BUILD_TARGET: ${{ matrix.target }}
-        run: ./ci/docker_build.sh
+        run: "chmod +x ./ci/docker_build.sh && ./ci/docker_build.sh"
       - uses: actions/upload-artifact@master
         with:
           name: ${{ matrix.target }}

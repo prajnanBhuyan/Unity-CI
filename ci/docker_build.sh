@@ -11,4 +11,4 @@ docker run \
   -w /project/ \
   -v $(pwd):/project/ \
   $IMAGE_NAME \
-  /bin/bash -c "/project/ci/before_script.sh && /project/ci/build.sh"
+  /bin/bash -c "chmod +x /project/ci/before_script.sh && /project/ci/before_script.sh && chmod +x /project/ci/build.sh && /project/ci/build.sh"
